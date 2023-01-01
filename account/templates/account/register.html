@@ -1,0 +1,13 @@
+<h2>Register</h2>
+<form method="POST" action="">
+    {% csrf_token %}
+    {% for field in form %}
+        {{field.label}} :
+        {{field}}
+    {% endfor %}
+    <input type="submit" value="Valider">
+</form>
+{% for message in messages %}
+    <p>{{message}}</p>
+{% endfor %}
+<p>Vous avez déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
