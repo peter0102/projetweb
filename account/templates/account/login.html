@@ -7,7 +7,7 @@
     <input type="password" placeholder="Password" name="password">
     <input type="submit" value="Login">
 </form>
-<p>Don't have an account? <a href="{% url 'register' %}">Sign in</a></p>
+<p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
 {% for message in messages %}
     <p>{{message}}</p>
 {% endfor %}

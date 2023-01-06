@@ -3,13 +3,13 @@
 <form method="POST" action="">
     {% csrf_token %}
     <label>Create a chatroom :</label>
-    <input type="text" placeholder="Nom du salon" name="room-Name">
-    <input type="submit" value="Créer">
+    <input type="text" placeholder="Chatroom" name="room-Name">
+    <input type="submit" value="Create">
 </form>
 <p>Available chatrooms : </p>
 {% for rooms in allRooms %}
     <p>{{rooms}}</p>
-    <p><a href="{% url 'room' rooms.roomName %}">Rejoindre ce salon</a></p>
+    <p><a href="{% url 'room' rooms.roomName %}">Join this chatroom</a></p>
 {% endfor %}
 {% for message in messages %}
     <p>{{message}}</p>

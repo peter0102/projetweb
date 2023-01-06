@@ -9,7 +9,7 @@ def home(request):
     if request.method=='POST':
         roomNameWanted=request.POST['room-Name']
         if Room.objects.filter(roomName=roomNameWanted).exists() :
-            messages.error(request,"Impossible, ce nom de salon existe déjà")
+            messages.error(request,"That chatroom already exists, please choose another name")
         else :
             newRoom=Room(roomName=roomNameWanted)
             newRoom.save()

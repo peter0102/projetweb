@@ -15,12 +15,12 @@ def register(request):
         password2=request.POST['password2']
         if form.is_valid(): 
             form.save() #si les données remplies sont correctes, on les sauvegarde et cela crée l'utilisateur
-            messages.success(request,"Compte crée, veuillez vous connecter")
+            messages.success(request,"Account created, you can sign in")
             return redirect('login') #redirection vers la page login
         if password1 != password2 :
-            messages.error(request,"Erreur lors de la création du compte, les mots de passe de correspondent pas")
+            messages.error(request,"Those passwords didn't match, please try again")
         else:
-            messages.error(request,"Erreur lors de la création du compte, l'identifiant existe déjà ou le mot de passe n'est pas assez compliqué ou mot de passe trop proche de l'identifiant")
+            messages.error(request,"Error, either the username is already taken, or the password isn't strong enough,")
     context={'form':form}
     template=loader.get_template('account/register.html')
     return HttpResponse(template.render(context,request))
@@ -34,10 +34,10 @@ def login(request):
         user=authenticate(request,username=username,password=password)
         if user is not None:
             auth_login(request,user)
-            messages.success(request,"Connecté")
+            messages.success(request,"Signed in")
             return redirect('home')
         else:
-            messages.error(request,"Nom d'utilisateur ou mot de passe incorrect")
+            messages.error(request,"Wrong password or username")
             return redirect('login')
     return render(request,'account/login.html')
 
