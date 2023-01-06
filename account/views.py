@@ -11,12 +11,16 @@ def register(request):
     form=User()
     if request.method=='POST' :
         form=User(request.POST)
+        password1=request.POST['password1']
+        password2=request.POST['password2']
         if form.is_valid(): 
             form.save() #si les données remplies sont correctes, on les sauvegarde et cela crée l'utilisateur
             messages.success(request,"Compte crée, veuillez vous connecter")
             return redirect('login') #redirection vers la page login
+        if password1 != password2 :
+            messages.error(request,"Erreur lors de la création du compte, les mots de passe de correspondent pas")
         else:
-            messages.error(request,"Erreur lors de la création du compte, veuillez recommencer")
+            messages.error(request,"Erreur lors de la création du compte, l'identifiant existe déjà ou le mot de passe n'est pas assez compliqué ou mot de passe trop proche de l'identifiant")
     context={'form':form}
     template=loader.get_template('account/register.html')
     return HttpResponse(template.render(context,request))

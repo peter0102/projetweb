@@ -1,5 +1,5 @@
-<h1>Salon : {{ nameOfTheRoom }}</h1>
-<p>Utilisateur : {{ username }}</p>
+<h1>Chatroom : {{ nameOfTheRoom }}</h1>
+<p>User : {{ username }}</p>
 <form method="POST" action="">
     {% csrf_token %}
     <input type="text" placeholder="Entrez votre message" name="message">

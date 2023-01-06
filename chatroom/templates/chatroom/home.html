@@ -2,11 +2,11 @@
 <a href="{% url 'logout' %}">Logout</a>
 <form method="POST" action="">
     {% csrf_token %}
-    <label>Créer un salon :</label>
+    <label>Create a chatroom :</label>
     <input type="text" placeholder="Nom du salon" name="room-Name">
     <input type="submit" value="Créer">
 </form>
-<p>Salons disponibles : </p>
+<p>Available chatrooms : </p>
 {% for rooms in allRooms %}
     <p>{{rooms}}</p>
     <p><a href="{% url 'room' rooms.roomName %}">Rejoindre ce salon</a></p>
