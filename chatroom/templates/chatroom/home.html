@@ -1,0 +1,16 @@
+<h2>Chatroom de lekip</h2>
+<a href="{% url 'logout' %}">Logout</a>
+<form method="POST" action="">
+    {% csrf_token %}
+    <label>Nom du salon</label>
+    <input type="text" placeholder="Nom du salon" name="room-Name">
+    <input type="submit" value="Créer">
+</form>
+<p>Salons disponibles : </p>
+{% for rooms in allRooms %}
+    <p>{{rooms}}</p>
+    <p><a href="{% url 'room' rooms.roomName %}">Rejoindre ce salon</a></p>
+{% endfor %}
+{% for message in messages %}
+    <p>{{message}}</p>
+{% endfor %}

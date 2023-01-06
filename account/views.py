@@ -4,7 +4,6 @@ from django.template import loader
 from .myforms import User
 from django.contrib.auth import authenticate,login as auth_login,logout as auth_logout
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 # Create your views here.
 def register(request):
     if request.user.is_authenticated: #si l'utilisateur est connecté, il ne doit pas pouvoir accéder aux pages register et login
@@ -41,6 +40,3 @@ def login(request):
 def logout(request):
     auth_logout(request)
     return redirect('login')
-@login_required(login_url='login') # l'utilisateur ne peut accéder à home s'il n'est pas connecté
-def home(request):
-    return render(request,'account/home.html')
