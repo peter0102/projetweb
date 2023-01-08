@@ -26,4 +26,4 @@ def rooms(request,roomName):
     allMessages=Message.objects.all()
     nameOfTheRoom=roomName
     username=request.user.get_username()
-    return render(request,'chatroom/room.html',{ 'nameOfTheRoom' : nameOfTheRoom, 'username':username}, {'allMessages':allMessages})
+    return render(request,'chatroom/room.html',{ 'nameOfTheRoom' : nameOfTheRoom, 'username':username})

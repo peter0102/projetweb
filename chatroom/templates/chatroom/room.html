@@ -1,4 +1,16 @@
-<script src="send.js"></script>
+<script>
+    function sendMessage() {
+  // Get the message text from the input field
+  var messageText = document.getElementById("message-input").value;
+  
+  // Clear the message input
+  document.getElementById("message-input").value = "";
+  
+  // Update the chat window with the new message
+  var chatWindow = document.getElementById("chat-window");
+  chatWindow.innerHTML += "<p>" + messageText + "</p>";
+}
+</script>
 <h1>Chatroom : {{ nameOfTheRoom }}</h1>
 <p>User : {{ username }}</p>
 <!--<form action="send.js" onsubmit="sendMessage()">
@@ -17,4 +29,8 @@
     <!-- This is where the chat messages will be displayed -->
     <p>Welcome to the chatroom !</p>
   </div>
+
+</form>
+
+</form>
 <p><a href={% url 'home' %}>Go</a> to the homepage</p>
