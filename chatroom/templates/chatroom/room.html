@@ -32,10 +32,9 @@
 </form>
 <script>
     $('#messageForm').submit(function(event) {
-        var url2='/send/{{nameOfTheRoom}}/' // pour récupérer le nom du salon avec la variable nameOfTheRoom
         event.preventDefault();
         $.ajax({
-            url: url2,
+            url: '/send/',
             type: 'POST', //POST, on envoie des données au serveur
             data: {
                 messageSent: $('#messageSent').val(),

@@ -25,17 +25,16 @@ def rooms(request,roomName):
     roomId=Room.objects.get(roomName=nameOfTheRoom)
     return render(request,'chatroom/room.html',{ 'nameOfTheRoom' : nameOfTheRoom, 'username':username, 'roomId':roomId})
 
-def sendMessage(request,roomName):
+def sendMessage(request):
     if request.method=='POST':
         messageSent=request.POST['messageSent']
         roomId=request.POST['roomId']
-        who=request.user.get_username()
-        newMessage=Message(message=messageSent,where=roomId,who=who) #on récupère le salon où a été envoyé le message
+        user=request.user.get_username()
+        newMessage=Message(message=messageSent,where=roomId,who=user) #on récupère le salon où a été envoyé le message
         newMessage.save()
         return JsonResponse({'success': True})
 
 def getMessage(request,roomName):
-    who=request.user.get_username()
     nameOfTheRoom=roomName
     roomId=Room.objects.get(roomName=nameOfTheRoom)
     allMessagesList=Message.objects.filter(where=roomId.id) #on ne récupère que les messages du salon souhaité
