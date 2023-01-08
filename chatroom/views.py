@@ -29,13 +29,15 @@ def sendMessage(request,roomName):
     if request.method=='POST':
         messageSent=request.POST['messageSent']
         roomId=request.POST['roomId']
-        newMessage=Message(message=messageSent,where=roomId) #on récupère le salon où a été envoyé le message
+        who=request.user.get_username()
+        newMessage=Message(message=messageSent,where=roomId,who=who) #on récupère le salon où a été envoyé le message
         newMessage.save()
         return JsonResponse({'success': True})
 
 def getMessage(request,roomName):
+    who=request.user.get_username()
     nameOfTheRoom=roomName
     roomId=Room.objects.get(roomName=nameOfTheRoom)
     allMessagesList=Message.objects.filter(where=roomId.id) #on ne récupère que les messages du salon souhaité
-    allMessagesJson=[{'allMessagesValue':message.message} for message in allMessagesList] #on récupère la valeur allMessageValue message.message(champ de la classe Message), un seul message aurait donné la classe, le deuxième donne la ième valeur
+    allMessagesJson=[{'allMessagesValue':message.message, 'who':message.who} for message in allMessagesList] #on récupère la valeur allMessageValue message.message(champ de la classe Message), un seul message aurait donné la classe, le deuxième donne la ième valeur
     return JsonResponse({"allMessagesList":allMessagesJson})

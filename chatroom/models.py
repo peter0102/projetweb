@@ -8,6 +8,7 @@ class Room(models.Model):
 
 class Message(models.Model):
     message=models.CharField(max_length=10000)
-    where=models.CharField(max_length=1000)
+    where=models.CharField(max_length=1000) #dans quel salon a été envoyé le message
+    who=models.CharField(max_length=1000) #qui a envoyé le message
     def __str__(self):
         return self.message

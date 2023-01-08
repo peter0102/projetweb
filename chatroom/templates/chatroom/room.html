@@ -27,6 +27,7 @@
     {% csrf_token %}
     <input type="text" placeholder="Type a message" name="messageSent" id="messageSent">
     <input type="hidden" name="roomId" id="roomId" value="{{roomId.id}}"> <!--on récupère le salon où a été envoyé le message sans en prévenir l'utilisateur-->
+    <input type="hidden" name="whoSent" id="whoSent" value="{{who}}">
     <button type="submit">Send</button>
 </form>
 <script>
@@ -39,6 +40,7 @@
             data: {
                 messageSent: $('#messageSent').val(),
                 roomId: $('#roomId').val(),
+                who: $('#whoSent').val(),
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             dataType: 'json',
@@ -59,10 +61,10 @@ setInterval(function(){
         dataType: 'json',
         success: function(response) {
             $('#chatWindow').empty(); 
-            var username="{{username}}"
+            var username="{{who}}"
             for (let i = 0; i < response.allMessagesList.length; i++) {
                 $('#chatWindow').append(
-                    '<p>' + username + " : " + response.allMessagesList[i].allMessagesValue + '</p>' //on récupère la valeur ième allMessagesValue de la liste allMessagesList
+                    '<p>' + response.allMessagesList[i].who + " : " + response.allMessagesList[i].allMessagesValue + '</p>' //on récupère la valeur ième allMessagesValue de la liste allMessagesList
                 );
             }
         }
