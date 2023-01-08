@@ -1,8 +1,20 @@
+<script src="send.js"></script>
 <h1>Chatroom : {{ nameOfTheRoom }}</h1>
 <p>User : {{ username }}</p>
+<!--<form action="send.js" onsubmit="sendMessage()">
+    {% csrf_token %}
+    <input type="text" placeholder="Enter your message" id="message-input" name="message">
+    <input type="submit" value="Send">
+</form>
 <form method="POST" action="">
     {% csrf_token %}
     <input type="text" placeholder="Enter your message" name="message">
     <input type="submit" value="Send">
-</form>
+</form>-->
+<input type="text" id="message-input">
+<button onclick="sendMessage()">Send</button>
+<div id="chat-window" style="height: 300px; overflow-y: scroll;">
+    <!-- This is where the chat messages will be displayed -->
+    <p>Welcome to the chatroom !</p>
+  </div>
 <p><a href={% url 'home' %}>Go</a> to the homepage</p>
