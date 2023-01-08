@@ -1,36 +1,82 @@
-<script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+ <script>
     function sendMessage() {
-  // Get the message text from the input field
-  var messageText = document.getElementById("message-input").value;
-  
-  // Clear the message input
-  document.getElementById("message-input").value = "";
-  
-  // Update the chat window with the new message
-  var chatWindow = document.getElementById("chat-window");
-  chatWindow.innerHTML += "<p>" + messageText + "</p>";
+        var user="{{ username }}"
+        // Get the message text from the input field
+        var messageText = document.getElementById("message-input").value;
+        
+        // Clear the message input
+        document.getElementById("message-input").value = "";
+        
+        // Update the chat window with the new message
+        var chatWindow = document.getElementById("chat-window");
+        chatWindow.innerHTML += "<p>" + user + " : " + messageText + "</p>";
+
 }
 </script>
+
 <h1>Chatroom : {{ nameOfTheRoom }}</h1>
-<p>User : {{ username }}</p>
+<p>User : {{ username }}
+</p>
 <!--<form action="send.js" onsubmit="sendMessage()">
     {% csrf_token %}
     <input type="text" placeholder="Enter your message" id="message-input" name="message">
     <input type="submit" value="Send">
-</form>
-<form method="POST" action="">
+</form> -->
+<form method="POST" action="" id="messageForm">
     {% csrf_token %}
-    <input type="text" placeholder="Type a message" name="messageSent">
-    <input type="submit" value="Send">
-</form>-->
+    <input type="text" placeholder="Type a message" name="messageSent" id="messageSent">
+    <input type="hidden" name="roomId" id="roomId" value="{{roomId.id}}"> <!--on récupère le salon où a été envoyé le message sans en prévenir l'utilisateur-->
+    <button type="submit">Send</button>
+</form>
+<script>
+    $('#messageForm').submit(function(event) {
+        var url2='/send/{{nameOfTheRoom}}/' // pour récupérer le nom du salon avec la variable nameOfTheRoom
+        event.preventDefault();
+        $.ajax({
+            url: url2,
+            type: 'POST', //POST, on envoie des données au serveur
+            data: {
+                messageSent: $('#messageSent').val(),
+                roomId: $('#roomId').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                document.getElementById("messageSent").value="" //on vide le formulaire
+                }
+            }
+        });
+    });
+</script>
+<script>
+setInterval(function(){
+    var url='/get/{{nameOfTheRoom}}'
+    $.ajax({
+        url: url,
+        type: 'GET', //GET, on reçoit des donénes du serveur
+        dataType: 'json',
+        success: function(response) {
+            $('#chatWindow').empty(); 
+            var username="{{username}}"
+            for (let i = 0; i < response.allMessagesList.length; i++) {
+                $('#chatWindow').append(
+                    '<p>' + username + " : " + response.allMessagesList[i].allMessagesValue + '</p>' //on récupère la valeur ième allMessagesValue de la liste allMessagesList
+                );
+            }
+        }
+    });
+},200) //rafraichis la requête toutes les 200ms
+</script>
+<div id="chatWindow">
+
+</div>
+<!-- 
 <input type="text" id="message-input">
 <button onclick="sendMessage()">Send</button>
 <div id="chat-window" style="height: 300px; overflow-y: scroll;">
-    <!-- This is where the chat messages will be displayed -->
+ //This is where the chat messages will be displayed
     <p>Welcome to the chatroom !</p>
-  </div>
-
-</form>
-
-</form>
+  </div> -->
 <p><a href={% url 'home' %}>Go</a> to the homepage</p>

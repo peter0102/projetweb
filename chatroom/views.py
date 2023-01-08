@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Room,Message
 from django.contrib import messages
+from django.http import JsonResponse
 # Create your views here.
 
 @login_required(login_url='login') # l'utilisateur ne peut accéder à home s'il n'est pas connecté
@@ -19,11 +20,22 @@ def home(request):
 
 @login_required(login_url='login') # l'utilisateur ne peut accéder à home s'il n'est pas connecté
 def rooms(request,roomName):
-    if request.method=='POST':
-        messageSent=request.POST['messageSent']
-        newMessage=Message(message=messageSent)
-        newMessage.save()
-    allMessages=Message.objects.all()
     nameOfTheRoom=roomName
     username=request.user.get_username()
-    return render(request,'chatroom/room.html',{ 'nameOfTheRoom' : nameOfTheRoom, 'username':username})
+    roomId=Room.objects.get(roomName=nameOfTheRoom)
+    return render(request,'chatroom/room.html',{ 'nameOfTheRoom' : nameOfTheRoom, 'username':username, 'roomId':roomId})
+
+def sendMessage(request,roomName):
+    if request.method=='POST':
+        messageSent=request.POST['messageSent']
+        roomId=request.POST['roomId']
+        newMessage=Message(message=messageSent,where=roomId) #on récupère le salon où a été envoyé le message
+        newMessage.save()
+        return JsonResponse({'success': True})
+
+def getMessage(request,roomName):
+    nameOfTheRoom=roomName
+    roomId=Room.objects.get(roomName=nameOfTheRoom)
+    allMessagesList=Message.objects.filter(where=roomId.id) #on ne récupère que les messages du salon souhaité
+    allMessagesJson=[{'allMessagesValue':message.message} for message in allMessagesList] #on récupère la valeur allMessageValue message.message(champ de la classe Message), un seul message aurait donné la classe, le deuxième donne la ième valeur
+    return JsonResponse({"allMessagesList":allMessagesJson})
