@@ -1,8 +1,11 @@
 <h1>Chatroom : {{ nameOfTheRoom }}</h1>
 <p>User : {{ username }}</p>
+{% for message in allMessages %}
+    <p>{{message}}</p>
+{% endfor %}
 <form method="POST" action="">
     {% csrf_token %}
-    <input type="text" placeholder="Enter your message" name="message">
+    <input type="text" placeholder="Type a message" name="messageSent">
     <input type="submit" value="Send">
 </form>
 <p><a href={% url 'home' %}>Go</a> to the homepage</p>
