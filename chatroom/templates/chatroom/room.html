@@ -26,20 +26,20 @@
 <form method="POST" action="" id="messageForm">
     {% csrf_token %}
     <input type="text" placeholder="Type a message" name="messageSent" id="messageSent">
-    <input type="hidden" name="roomId" id="roomId" value="{{roomId.id}}"> <!--on récupère le salon où a été envoyé le message sans en prévenir l'utilisateur-->
-    <input type="hidden" name="whoSent" id="whoSent" value="{{who}}">
-    <button type="submit">Send</button>
+    <input type="hidden" name="chatRoomName" id="chatRoomName" value="{{chatRoomName}}"> <!--on récupère le salon où a été envoyé le message-->
+    <input type="hidden" name="whoSent" id="whoSent" value="{{username}}"> <!--on récupère l'utolosateur qui a envoyé le message-->
+    <button type="submit">Send</button> <!--On récupère tous les infos du message avec le submit-->
 </form>
 <script>
     $('#messageForm').submit(function(event) {
-        event.preventDefault();
-        $.ajax({
-            url: '/send/',
+        event.preventDefault(); // on empêche le formulaire de s'envoyer normalement ce qui ferait rafraichir la page, à la place on execute le code suivant
+        $.ajax({ //requete ajax au serveur, 
+            url: '/send/', //à cette url, appelle la vue sendMessage et la stocke avec les données suivantes
             type: 'POST', //POST, on envoie des données au serveur
             data: {
                 messageSent: $('#messageSent').val(),
-                roomId: $('#roomId').val(),
-                who: $('#whoSent').val(),
+                chatRoomName: $('#chatRoomName').val(), //val() pour récupérer les valeurs
+                whoSent: $('#whoSent').val(),
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             dataType: 'json',
