@@ -44,7 +44,9 @@
             },
             dataType: 'json',
             success: function(response) {
-                if (response.success) {
+                if (response.isEmpty) {
+                    alert("You can't send an empty message !")
+                } else {
                 document.getElementById("messageSent").value="" //on vide le formulaire
                 }
             }

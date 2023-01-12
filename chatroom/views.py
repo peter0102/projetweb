@@ -32,10 +32,12 @@ def sendMessage(request):
     if request.method=='POST':
         messageSent=request.POST['messageSent']
         chatRoomName=request.POST['chatRoomName']
+        if messageSent=="":
+            return JsonResponse({'isEmpty': True})
         user=request.user.get_username()
         newMessage=Message(message=messageSent,where=chatRoomName,who=user) #on sauvegarde le message
         newMessage.save()
-        return JsonResponse({'success': True})
+        return JsonResponse({'isEmpty': False})
 
 def getMessage(request,roomName):
     allMessagesList=Message.objects.filter(where=roomName) #on ne récupère que les messages du salon souhaité
