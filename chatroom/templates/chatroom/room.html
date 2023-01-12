@@ -52,27 +52,47 @@
     });
 </script>
 <script>
-setInterval(function(){
-    var url='/get/{{nameOfTheRoom}}'
-    $.ajax({
-        url: url,
-        type: 'GET', //GET, on reçoit des donénes du serveur
-        dataType: 'json',
-        success: function(response) {
-            $('#chatWindow').empty(); 
-            var username="{{who}}"
-            for (let i = 0; i < response.allMessagesList.length; i++) {
-                $('#chatWindow').append(
-                    '<p>' + response.allMessagesList[i].who + " : " + response.allMessagesList[i].allMessagesValue + '</p>' //on récupère la valeur ième allMessagesValue de la liste allMessagesList
-                );
+    function deleteMessage(messageId) { // on récupère l'id du message qu'on cherche à supprimer
+        $.ajax({
+            url : '/deleteMessage/', // redirige vers cette url pour que la vue deleteMessage soit appelée 
+            type : 'POST',
+            data : {
+                messageId: messageId,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+        })
+    }
+    
+    setInterval(function(){
+        var url='/get/{{nameOfTheRoom}}'
+        $.ajax({
+            url: url,
+            type: 'GET', //GET, on reçoit des donénes du serveur
+            dataType: 'json',
+            success: function(response) {
+                document.getElementById("chatWindow").innerHTML = "" //on vide la fenêtre de chat à chaque rafraichissement de la page pour éviter les doublons de messages
+                //sinon les messages s'affichent plusieurs fois
+                var username="{{who}}"
+                for (let i = 0; i < response.allMessagesList.length; i++) {
+                    document.getElementById("chatWindow").innerHTML+='<p>' + response.allMessagesList[i].who + " : " + 
+                    response.allMessagesList[i].allMessagesValue +'</p>' // //on récupère la valeur ième allMessagesValue de la liste allMessagesList
+                    {% if user.is_superuser %} // s'il s'agit d'un super utilisateur, crée des boutons de suppression pour chaque message
+                        var deletetionButton=document.createElement("button")
+                        deletetionButton.innerHTML="Delete"
+                        deletetionButton.setAttribute("onclick", "deleteMessage("+response.allMessagesList[i].messageId+")")
+                        document.getElementById("chatWindow").appendChild(deletetionButton)
+                    {% endif %}
+
+                }
             }
-        }
-    });
-},200) //rafraichis la requête toutes les 200ms
+        });
+},500) //rafraichis la requête toutes les 500ms
 </script>
 <div id="chatWindow">
 
 </div>
+
 <!-- 
 <input type="text" id="message-input">
 <button onclick="sendMessage()">Send</button>
