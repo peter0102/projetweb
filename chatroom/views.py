@@ -60,6 +60,9 @@ def roomDelete(request):
         roomName=request.POST['roomName']
         room=Room.objects.get(roomName=roomName)
         room.delete()
+        allMessagesList=Message.objects.filter(where=roomName)
+        for message in allMessagesList: #on supprime tous les messages du salon, au cas où si on recrée un salon portant le même nom que le salon supprimé
+            message.delete()
         return JsonResponse({'success': True})
 def admin(request):
     if request.user.is_superuser:
