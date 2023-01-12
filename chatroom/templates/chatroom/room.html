@@ -1,20 +1,4 @@
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
- <script>
-    function sendMessage() {
-        var user="{{ username }}"
-        // Get the message text from the input field
-        var messageText = document.getElementById("message-input").value;
-        
-        // Clear the message input
-        document.getElementById("message-input").value = "";
-        
-        // Update the chat window with the new message
-        var chatWindow = document.getElementById("chat-window");
-        chatWindow.innerHTML += "<p>" + user + " : " + messageText + "</p>";
-
-}
-</script>
-
 <h1>Chatroom : {{ nameOfTheRoom }}</h1>
 <p>User : {{ username }}
 </p>
@@ -95,11 +79,4 @@
 
 </div>
 
-<!-- 
-<input type="text" id="message-input">
-<button onclick="sendMessage()">Send</button>
-<div id="chat-window" style="height: 300px; overflow-y: scroll;">
- //This is where the chat messages will be displayed
-    <p>Welcome to the chatroom !</p>
-  </div> -->
 <p><a href={% url 'home' %}>Go</a> to the homepage</p>

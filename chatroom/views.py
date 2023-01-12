@@ -39,7 +39,7 @@ def sendMessage(request):
         newMessage.save()
         return JsonResponse({'isEmpty': False})
 
-def getMessage(request,roomName):
+def getMessage(request,roomName): #paramètre roomName nécessaire pour ne récupérer que les messages d'un salon
     allMessagesList=Message.objects.filter(where=roomName) #on ne récupère que les messages du salon souhaité
     allMessagesJson=[{'allMessagesValue':message.message, 'who':message.who, 'messageId':message.id} for message in allMessagesList] #on récupère la valeur allMessageValue message.message(champ de la classe Message), un seul message aurait donné la classe, le deuxième donne la ième valeur
     #on récupère aussi l'id du message pour ensuite simplifier la suppression de message
