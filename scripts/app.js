@@ -2,6 +2,7 @@ const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");
 const emojiSelector = document.getElementById("emojiSelector");
 const emojiList = document.getElementById("emojiList");
 const emojiSearch = document.getElementById("emojiSearch");
+const emojiInput = document.getElementById("taper-ici")
 
 emojiSelectorIcon.addEventListener('click', () => {
     emojiSelector.classList.toggle("active");
@@ -17,19 +18,31 @@ function loadEmoji(data){
         let li = document.createElement('li');
         li.setAttribute("emoji-name", emoji.name);
         li.textContent = emoji.emoji;
+        li.addEventListener('click', addEmojiToInput); 
         emojiList.appendChild(li);
     });
 }
 
-emojiSearch.addEventListener('keyup', e =>{
+function addEmojiToInput(e) {
+    let selectedEmoji = e.target.textContent;
+    emojiInput.value += selectedEmoji; 
+    emojiSelector.classList.remove("active");
+}
+
+emojiSearch.addEventListener('keyup', e => {
     let value = e.target.value;
-    console.log(value);
-    let emojis = document.querySelectorAll('emojiList li')
-    emojis.forEach(emoji => {
-        if (emoji.getAttribute('emoji-name').toLowerCase().includes(value)) {
-            emoji.getElementsByClassName.display = "flex"; //montre le(s) emoji(s) si un résultat match, en changeant la propriété du css à 'flex'
-        } else {
-            emoji.style.display = "none" ////cache l'emoji si le résultat de la recherche n'apparaît pas
-        }
-    })
-})
+    let emojis = document.querySelectorAll('#emojiList li')
+    if(value == "") {
+        emojis.forEach(emoji => {
+            emoji.style.display = "flex"; //display all emojis if the search bar is empty
+        });
+    } else {
+        emojis.forEach(emoji => {
+            if (emoji.getAttribute('emoji-name').toLowerCase().includes(value)) {
+                emoji.style.display = "flex"; //display the matching emojis
+            } else {
+                emoji.style.display = "none"; //hide the non-matching emojis
+            }
+        });
+    }
+});
