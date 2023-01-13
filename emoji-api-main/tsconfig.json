@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2020",
+		"declaration": true,
+		"strict": true,
+		"strictNullChecks": false,
+		"esModuleInterop": true,
+		"outDir": "./build/",
+		"resolveJsonModule": true
+	},
+	"files": [
+		"src/Parser.ts",
+        "src/Emoji.ts",
+		"src/index.ts"
+	]
+}
