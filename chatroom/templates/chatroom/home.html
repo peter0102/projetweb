@@ -1,23 +1,35 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script>
-    function deleteRoom(roomName) {
-        $.ajax({
-            url : '/deleteRoom/',
-            type : 'POST',
-            data : {
-                roomName: roomName,
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="style1.css" />
+    </head>
+    <body>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="home.js"></script>
+        <header>
+            <div style="text-align: center;">
+                <h1 class="login-header">Chatroom de lekip</h1>
+            </div>
+        </header>
+        <script>
+            function deleteRoom(roomName) {
+                $.ajax({
+                    url : '/deleteRoom/',
+                    type : 'POST',
+                    data : {
+                    roomName: roomName,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    dataType: 'json',
+                })
+            };
+            setInterval(function(){
+            $.ajax({
+            url: '/getRooms/',
+            type: 'GET', //GET, on reçoit des donénes du serveur
             dataType: 'json',
-        })
-    };
-
-setInterval(function(){
-    $.ajax({
-        url: '/getRooms/',
-        type: 'GET', //GET, on reçoit des donénes du serveur
-        dataType: 'json',
-        success: function(response) {
+            success: function(response) {
             document.getElementById("roomWindow").innerHTML = "" //on vide la fenêtre de chat à chaque rafraichissement de la page pour éviter les doublons de messages
             //sinon les messages s'affichent plusieurs fois
             for (let i = 0; i < response.allRooms.length; i++) {
@@ -29,28 +41,31 @@ setInterval(function(){
                     deletetionButton.setAttribute("onclick", "deleteRoom('"+response.allRooms[i].roomName+"')") //execute la fonction deleteRoom au clic
                     document.getElementById("roomWindow").appendChild(deletetionButton)
                 {% endif %}
-
             }
-        }
-    });
-},200) //envoie une requete toutes les 200ms
-</script>
-<h2>Chatroom de lekip</h2>
-{% if user.is_superuser %}
-<a href="/chatroom/admin/">Admin</a>
-{% endif %}
-<a href="{% url 'logout' %}">Logout</a>
-<form method="POST" action="">
-    {% csrf_token %}
-    <label>Create a chatroom :</label>
-    <input type="text" placeholder="Chatroom" name="room-Name">
-    <input type="submit" value="Create">
-</form>
-<p>Available chatrooms : </p>
-<div id="roomWindow">
-
-</div>  
-
-{% for message in messages %}
-    <p>{{message}}</p>
-{% endfor %}
+            }
+            });
+            },200) //envoie une requete toutes les 200ms
+        </script>
+        <section>
+            <div>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div style="display: flex; justify-content: center;">
+                        <label style="margin-right: 10px;">Create a chatroom :</label>
+                        <input type="text" placeholder="Chatroom" name="room-Name" class="type-a-message">
+                        <input type="submit" value="Create" class="send-button">
+                    </div>
+                </form>
+            </div>
+        </section>
+        <section>
+            <h4 class="normal-text">
+                <p>Available chatrooms : </p>
+                <div id="roomWindow"></div>  
+                {% for message in messages %}
+                <p>{{message}}</p>
+                {% endfor %}
+            </h4>
+        </section>
+     </body>
+</html>  
