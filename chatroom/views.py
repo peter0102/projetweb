@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Room,Message
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth.models import Group,User
 # Create your views here.
 
 @login_required(login_url='login') # l'utilisateur ne peut accéder à home s'il n'est pas connecté
@@ -30,14 +31,18 @@ def rooms(request,roomName):
 
 def sendMessage(request):
     if request.method=='POST':
-        messageSent=request.POST['messageSent']
-        chatRoomName=request.POST['chatRoomName']
-        if messageSent=="":
-            return JsonResponse({'isEmpty': True})
-        user=request.user.get_username()
-        newMessage=Message(message=messageSent,where=chatRoomName,who=user) #on sauvegarde le message
-        newMessage.save()
-        return JsonResponse({'isEmpty': False})
+        user = User.objects.get(username=request.user.get_username())
+        getGroup=Group.objects.get(name='isNotMuted') #on récupère le groupe
+        if user.groups.filter(name=getGroup).exists() : #si l'utilisateur est dans le groupe isNotMuted, il peut envoyer des messages
+            messageSent=request.POST['messageSent']
+            chatRoomName=request.POST['chatRoomName']
+            if messageSent=="":
+                return JsonResponse({'isEmpty': True})
+            newMessage=Message(message=messageSent,where=chatRoomName,who=user) #on sauvegarde le message
+            newMessage.save()
+            return JsonResponse({'isEmpty': False})
+        else :
+            return JsonResponse({'isMuted': True}) #si l'utilisateur n'est pas dans le groupe isNotMuted, il ne peut pas envoyer de message
 
 def getMessage(request,roomName): #paramètre roomName nécessaire pour ne récupérer que les messages d'un salon
     allMessagesList=Message.objects.filter(where=roomName) #on ne récupère que les messages du salon souhaité
@@ -101,3 +106,23 @@ def deleteUser(request):
         user=User.objects.get(username=username)
         user.delete()
         return JsonResponse({'success': True})
+def muteUser(request):
+    if request.method=='POST':
+        username=request.POST['username']
+        User=get_user_model()
+        user=User.objects.get(username=username)
+        getGroup=Group.objects.get(name='isNotMuted')
+        if not user.groups.filter(name=getGroup).exists() :
+            return JsonResponse({'isMuted': True})
+        user.groups.remove(getGroup)
+        return JsonResponse({'isMuted': False})
+def unmuteUser(request):
+    if request.method=='POST':
+        username=request.POST['username']
+        User=get_user_model()
+        user=User.objects.get(username=username)
+        getGroup=Group.objects.get(name='isNotMuted')
+        if user.groups.filter(name=getGroup).exists() :
+            return JsonResponse({'isNotMuted': True})
+        user.groups.add(getGroup)
+        return JsonResponse({'isNotMuted': False})

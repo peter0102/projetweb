@@ -25,7 +25,11 @@
             success: function(response) {
                 if (response.isEmpty) {
                     alert("You can't send an empty message !")
-                } else {
+                }
+                else if (response.isMuted) { // si l'utilisateur est muet, on affiche un message d'erreur
+                    alert("You are muted !")
+                } 
+                else {
                 document.getElementById("messageSent").value="" //on vide le formulaire
                 }
             }
@@ -44,7 +48,39 @@
             dataType: 'json',
         })
     }
-    
+    function muteUser(username) {
+        $.ajax({
+            url: '/muteUser/',
+            type: 'POST',
+            data: {
+                username: username,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.isMuted) {
+                    alert("User " + username + " is muted already")
+                }
+            }
+        })
+    };
+    function unmuteUser(username) {
+        $.ajax({
+            url: '/unmuteUser/',
+            type: 'POST',
+            data: {
+                username: username,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.isNotMuted) {
+                    alert("User " + username + " is unmuted already")
+                }
+            }
+        })
+    };
+
     setInterval(function(){
         var url='/get/{{nameOfTheRoom}}'
         $.ajax({
@@ -68,10 +104,36 @@
                 }
             }
         });
-},200) //envoie une requête toutes les 200ms
+        $.ajax({
+            url: '/getUsers/',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                document.getElementById("userWindow").innerHTML = ""
+                for (let i = 0; i < response.users.length; i++) {
+                    document.getElementById("userWindow").innerHTML += '<p>' + response.users[i].username + '</p>'
+
+                    var muteUser=document.createElement("button")
+                    muteUser.innerHTML="Mute user"
+                    muteUser.setAttribute("onclick", "muteUser('"+response.users[i].username+"')")
+                    document.getElementById("userWindow").appendChild(muteUser)
+
+                    var unmuteUser=document.createElement("button")
+                    unmuteUser.innerHTML="Unmute user"
+                    unmuteUser.setAttribute("onclick", "unmuteUser('"+response.users[i].username+"')")
+                    document.getElementById("userWindow").appendChild(unmuteUser)
+                }
+            }
+        })
+},300) //envoie une requête toutes les 600ms
 </script>
 <div id="chatWindow">
+</div>
+{% if user.is_superuser %}
+<h2>User list</h2>
+<div id="userWindow">
 
 </div>
+{% endif %}
 
 <p><a href={% url 'home' %}>Go</a> to the homepage</p>

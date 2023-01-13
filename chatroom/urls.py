@@ -15,4 +15,6 @@ urlpatterns = [
     path('setSuperUser/',views.setSuperUser,name='setSuperUser'),
     path('unsetSuperUser/',views.unsetSuperUser,name='unsetSuperUser'),
     path('deleteUser/',views.deleteUser,name='deleteUser'),
+    path('muteUser/',views.muteUser,name='muteUser'),
+    path('unmuteUser/',views.unmuteUser,name='unmuteUser'),
 ]

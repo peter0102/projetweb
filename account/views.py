@@ -3,11 +3,12 @@ from django.http import HttpResponse
 from django.template import loader
 from .myforms import UserForm
 from django.contrib.auth import authenticate,login as auth_login,logout as auth_logout,get_user_model
+from django.contrib.auth.models import Group
 from django.contrib import messages
 # Create your views here.
 def register(request):
     if request.user.is_authenticated: #si l'utilisateur est connecté, il ne doit pas pouvoir accéder aux pages register et login
-        return redirect('home')
+        return redirect('home') #home defini dans chatroom\urls.py
     form=UserForm()
     if request.method=='POST' :
         form=UserForm(request.POST)
@@ -17,6 +18,10 @@ def register(request):
         User=get_user_model()
         if form.is_valid(): 
             form.save() #si les données remplies sont correctes, on les sauvegarde et cela crée l'utilisateur
+            newGroup = Group.objects.get_or_create(name ='isNotMuted') #on crée un groupe pour les utilisateurs muets
+            getGroup=Group.objects.get(name='isNotMuted') #on récupère le groupe
+            user=User.objects.get(username=username) #on récupère l'utilisateur
+            user.groups.add(getGroup) #on ajoute l'utilisateur au groupe
             messages.success(request,"Account created, you can sign in")
             return redirect('login') #redirection vers la page login
         elif password1 != password2 :
