@@ -8,4 +8,10 @@ On s'est donc tourné vers le javascript, et on a résolu ce problème en utilis
 Les requêtes ajax permettent d'envoyer des informations vers la base de données, et d'en recevoir sans que la page ne se rafraîchisse.
 Partie DJANGO :
 Pour la création de compte et l’authentification, on utilise le module UserCreationForm de Django pour d’abord créer le modèle, puis les modules login et logout pour se connecter et se déconnecter.
-On crée ensuite 2 modèles pour les messages et les salons. Le modèle Room ne possède qu’un champ, son nom, et le modèle Message en contient plusieurs : le contenu du message, l’envoyeur et le salon où il a été envoyé
+On crée ensuite 2 modèles pour les messages et les salons. Le modèle Room ne possède qu’un champ, son nom, et le modèle Message en contient plusieurs : le contenu du message, l’envoyeur et le salon où il a été envoyé. Ces différents champs vont servir plus tard à différencier les tous les messages en fonction des salons dans lesquels ils ont été envoyés.
+Partie JAVASCRIPT
+On crée les templates dans lesquels on insère un formulaire pour envoyer les messages. A la soumission de ce formulaire, on envoie une requête ajax vers une url, et la vue associée à cette url se charge de sauvegarder le message dans la base de données.
+Ensuite, on récupère tous les messages de la base de données avec une requête ajax vers le serveur, requête qui se fait toutes les 200ms. Cette requête envoie vers une url, et la vue associée liste tous les messages possibles, et les renvoie sous forme de liste, liste qu’on exploite dans la template.
+Pour la gestion des droits, on effectue utilise encore ajax, la seule donnée qu’on récupère est le nom d’utilisateur, et la vue associée se charge d’enlever, ou de donner les droits de « superuser » à l’utilisateur.
+Pour les fonctions de modération, il y a d’abord celle qui permet d’empêcher un utilisateur d’envoyer des messages. Pour cela, il y a deux groupes, un où les utilisateurs sont libres d’envoyer des messages, et l’autre où ils n’ont pas le droit. On utilise ajax, et on déplace l’utilisateur dans le groupe qu’on veut grâce à la vue associée.
+On peut aussi « bannir » un utilisateur de la salle, pour ce faire, si l’utilisateur n’est pas dans le groupe nommé après le nom du salon, celui-ci ne peut pas y entrer.
