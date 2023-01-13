@@ -1,13 +1,29 @@
-<h2>Login</h2>
-<form method="POST" action="">
-    {% csrf_token %}
-    <label>Username :</label>
-    <input type="text" placeholder="Username" name="username">
-    <label>Password :</label>
-    <input type="password" placeholder="Password" name="password">
-    <input type="submit" value="Login">
-</form>
-<p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
-{% for message in messages %}
-    <p>{{message}}</p>
-{% endfor %}
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="style1.css" />
+    </head>
+    <body>
+        <header>
+           <h1>Login</h1>
+        </header>
+        <section>
+            <form method="POST" action="">{% csrf_token %}
+            <div class="type-a-message-container">
+                <label>Username :</label>
+                <input type="text" placeholder="Username" name="username" class="type-a-message">
+                <label>Password :</label>
+                <input type="password" placeholder="Password" name="password" class="type-a-message">
+                <input type="submit" value="Login" class="send-button">
+            </div>
+            </form>
+            <p><a href="{% url 'register' %}" class="normal-text">Don't have an account? Sign up</a></p>
+            {% for message in messages %}
+            <p>{{message}}</p>
+            {% endfor %}
+        </section>
+     </body>
+</html>           
+          
+
