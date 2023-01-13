@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="style1.css" />
+    </head>
+    <body>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <header>
+           <h1>Chatroom{{ nameOfTheRoom }}</h1>
+        </header>
+        <section>
+            <div>
+                <h2>User{{ username }} </h2>
+            </div>
+            <div class="form-container">
+                <h3>
+                <a href="{% url 'home' %}"> Go to the homepage</a>   
+                <form method="POST" action="" id="messageForm" onsubmit="return messageSubmit(event)"> 
+                {% csrf_token %}
+                    <input type="text" placeholder="Type a message" name="messageSent" id="messageSent"> 
+                    <input type="hidden" name="chatRoomName" id="chatRoomName" value="{{chatRoomName}}"> <!--on récupère le salon où a été envoyé le message-->
+                    <input type="hidden" name="whoSent" id="whoSent" value="{{username}}"> <!--on récupère l'utolosateur qui a envoyé le message-->
+                    <button type="submit" class="send-emoji-button">Emoji</button>
+                    <button type="submit" class="send-emoji-button"> Send ➡ <i class="fas fa-arrow-right"></i></button> <!--On récupère tous les infos du message avec le submit-->
+                </form>
+                </h3>
+            </div>
+        </section>
+        <script>
+            function messageSubmit(event) { //fonction qui est appelée quand on appuie sur le bouton submit
+            event.preventDefault(); // empêche le formulaire de se soumettre normalement ce qui ferait rafrachir la page
+            $.ajax({ //requete ajax au serveur, 
+            url: '/send/', //à cette url, appelle la vue sendMessage et la stocke avec les données suivantes
+            type: 'POST', //POST, on envoie des données au serveur
+            data: {
+            messageSent: $('#messageSent').val(),
+            chatRoomName: $('#chatRoomName').val(), //val() pour récupérer les valeurs
+            whoSent: $('#whoSent').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function(response) {
+            if (response.isEmpty) {
+               alert("You can't send an empty message !")
+            } else {
+                document.getElementById("messageSent").value="" //on vide le formulaire
+            }
+            }
+            });
+            }
+        </script>
+        <script>
+            function deleteMessage(messageId) { // on récupère l'id du message qu'on cherche à supprimer
+            $.ajax({
+            url : '/deleteMessage/', // redirige vers cette url pour que la vue deleteMessage soit appelée 
+            type : 'POST',
+            data : {
+            messageId: messageId,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            })
+            }
+            setInterval(function(){var url='/get/{{nameOfTheRoom}}'
+            $.ajax({
+            url: url,
+            type: 'GET', //GET, on reçoit des donénes du serveur
+            dataType: 'json',
+            success: function(response) {document.getElementById("chatWindow").innerHTML = "" //on vide la fenêtre de chat à chaque rafraichissement de la page pour éviter les doublons de messages
+            //sinon les messages s'affichent plusieurs fois
+            var username="{{who}}"
+            for (let i = 0; i < response.allMessagesList.length; i++) {
+                document.getElementById("chatWindow").innerHTML+='<p>'+ response.allMessagesList[i].who + " : " + 
+                response.allMessagesList[i].allMessagesValue +'</p>' // //on récupère la valeur ième allMessagesValue de la liste allMessagesList
+                {% if user.is_superuser %} // s'il s'agit d'un super utilisateur, crée des boutons de suppression pour chaque message
+                var deletetionButton=document.createElement("button")
+                deletetionButton.innerHTML="Delete" deletetionButton.setAttribute("onclick","deleteMessage("+response.allMessagesList[i].messageId+")")
+                document.getElementById("chatWindow").appendChild(deletetionButton)
+                {% endif %}
+            }
+            }
+            });
+            $.ajax({
+            url: '/getUsers/',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                document.getElementById("userWindow").innerHTML = ""
+                for (let i = 0; i < response.users.length; i++) {
+                    document.getElementById("userWindow").innerHTML += '<p>' + response.users[i].username + '</p>'
+
+                    var muteUser=document.createElement("button")
+                    muteUser.innerHTML="Mute user"
+                    muteUser.setAttribute("onclick", "muteUser('"+response.users[i].username+"')")
+                    document.getElementById("userWindow").appendChild(muteUser)
+
+                    var unmuteUser=document.createElement("button")
+                    unmuteUser.innerHTML="Unmute user"
+                    unmuteUser.setAttribute("onclick", "unmuteUser('"+response.users[i].username+"')")
+                    document.getElementById("userWindow").appendChild(unmuteUser)
+                }
+            }
+        })                             
+        },300) //envoie une requête toutes les 200ms
+        </script>
+        <div id="chatWindow"></div>
+        {% if user.is_superuser %}
+            <h2>User list</h2>
+        <div id="userWindow"></div>
+            {% endif %}
+     </body>
+</html>           
+            
+            
+            
