@@ -1,0 +1,110 @@
+@keyframes couleurfond{
+    0%{
+        background-color:black;
+    }
+    50%{
+        background-color:grey;
+    }
+    100%{
+        background-color:white;
+    }
+}
+
+*{
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family: Arial;
+    color:#808080;
+}
+
+header{
+    text-align:center;
+    width:100%;
+}
+
+h1{
+    margin:40px;
+    color:#808080;
+    text-decoration: none;
+}
+
+div h2{
+    margin-bottom: 20px;
+}
+
+div{
+    margin-top: 30px;
+}
+
+#messageSent{
+    margin-right: 10px; 
+    width: 500px; 
+    height: 30px; 
+}
+
+button{
+    margin-left: 10px; 
+}
+
+h1{
+    text-decoration: underline; 
+    color: black; 
+}
+
+button{
+    font-size: 10px; 
+    padding: 10px 20px;
+}
+
+input[type="text"] {
+    height: 38px; 
+    padding: 0 20px; 
+    font-size:16px;
+}
+
+.form-container a {
+    margin-top: 40px;
+}
+
+#chatWindow {
+    width: 600px; 
+    height: 400px; 
+    overflow-y: scroll; 
+}
+
+button {
+    background-color: plum;
+    color: white; 
+}
+
+.fa-arrow-right {
+    font-size: 10px; 
+    background-color: plum; 
+    color: white; 
+}
+
+.normal-text{
+    font-family: Arial, Helvetica, sans-serif; 
+    color: black; 
+}
+
+.form-container button {
+    height: 35px;
+}
+
+.send-emoji-button { 
+    width: 100px; 
+    font-size: 13px; 
+    background-color: plum; 
+    color: white; 
+}
+
+.send-button { 
+    width: 100px; 
+    font-size: 18px; 
+    background-color: plum; 
+    color: white; 
+}
