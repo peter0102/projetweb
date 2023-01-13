@@ -6,7 +6,7 @@
     {% csrf_token %}
     <input type="text" placeholder="Type a message" name="messageSent" id="messageSent">
     <input type="hidden" name="chatRoomName" id="chatRoomName" value="{{chatRoomName}}"> <!--on récupère le salon où a été envoyé le message-->
-    <input type="hidden" name="whoSent" id="whoSent" value="{{username}}"> <!--on récupère l'utolosateur qui a envoyé le message-->
+    <input type="hidden" name="whoSent" id="whoSent" value="{{username}}"> <!--on récupère l'utilisateur qui a envoyé le message-->
     <button type="submit">Send</button> <!--On récupère tous les infos du message avec le submit-->
 </form>
 <script>
@@ -92,7 +92,7 @@
                 //sinon les messages s'affichent plusieurs fois
                 var username="{{who}}"
                 for (let i = 0; i < response.allMessagesList.length; i++) {
-                    document.getElementById("chatWindow").innerHTML+='<p>' + response.allMessagesList[i].who + " : " + 
+                    document.getElementById("chatWindow").innerHTML+='<p>' + response.allMessagesList[i].when +" " + response.allMessagesList[i].who + " : " + 
                     response.allMessagesList[i].allMessagesValue +'</p>' // //on récupère la valeur ième allMessagesValue de la liste allMessagesList
                     {% if user.is_superuser %} // s'il s'agit d'un super utilisateur, crée des boutons de suppression pour chaque message
                         var deletetionButton=document.createElement("button")
