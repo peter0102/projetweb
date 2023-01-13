@@ -17,4 +17,6 @@ urlpatterns = [
     path('deleteUser/',views.deleteUser,name='deleteUser'),
     path('muteUser/',views.muteUser,name='muteUser'),
     path('unmuteUser/',views.unmuteUser,name='unmuteUser'),
+    path('banUser/',views.banUser,name='banUser'),
+    path('unbanUser/',views.unbanUser,name='unbanUser'),
 ]
