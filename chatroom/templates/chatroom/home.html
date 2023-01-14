@@ -1,35 +1,23 @@
-<!doctype html>
-<html lang="fr">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="style1.css" />
-    </head>
-    <body>
-       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-        <script src="home.js"></script>
-        <header>
-            <div style="text-align: center;">
-                <h1 class="login-header">Chatroom de lekip</h1>
-            </div>
-        </header>
-        <script>
-            function deleteRoom(roomName) {
-                $.ajax({
-                    url : '/deleteRoom/',
-                    type : 'POST',
-                    data : {
-                    roomName: roomName,
-                        csrfmiddlewaretoken: '{{ csrf_token }}'
-                    },
-                    dataType: 'json',
-                })
-            };
-            setInterval(function(){
-            $.ajax({
-            url: '/getRooms/',
-            type: 'GET', //GET, on reçoit des donénes du serveur
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    function deleteRoom(roomName) {
+        $.ajax({
+            url : '/deleteRoom/',
+            type : 'POST',
+            data : {
+                roomName: roomName,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
             dataType: 'json',
-            success: function(response) {
+        })
+    };
+
+setInterval(function(){
+    $.ajax({
+        url: '/getRooms/',
+        type: 'GET', //GET, on reçoit des donénes du serveur
+        dataType: 'json',
+        success: function(response) {
             document.getElementById("roomWindow").innerHTML = "" //on vide la fenêtre de chat à chaque rafraichissement de la page pour éviter les doublons de messages
             //sinon les messages s'affichent plusieurs fois
             for (let i = 0; i < response.allRooms.length; i++) {
@@ -41,13 +29,30 @@
                     deletetionButton.setAttribute("onclick", "deleteRoom('"+response.allRooms[i].roomName+"')") //execute la fonction deleteRoom au clic
                     document.getElementById("roomWindow").appendChild(deletetionButton)
                 {% endif %}
+
             }
-            }
-            });
-            },200) //envoie une requete toutes les 200ms
-        </script>
+        }
+    });
+},200) //envoie une requete toutes les 200ms
+</script>
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="style1.css" />
+    </head>
+    <body>
+        <header>
+            <div style="text-align: center;">
+                <h1 class="login-header">Chatroom de lekip</h1>
+            </div>
+        </header>
         <section>
             <div>
+                {% if user.is_superuser %}
+                <a href="/chatroom/admin/">Admin</a>
+                {% endif %}
+                <a href="{% url 'logout' %}">Logout</a>
                 <form method="POST" action="">
                     {% csrf_token %}
                     <div style="display: flex; justify-content: center;">

@@ -183,18 +183,17 @@
             <div class="form-container">
                 <h3>
                 <a href="{% url 'home' %}"> Go to the homepage</a>   
-                <form method="POST" action="" id="messageForm" onsubmit="return messageSubmit(event)"> 
-                {% csrf_token %}
-                    <input type="text" placeholder="Type a message" name="messageSent" id="messageSent"> 
-                    <input type="hidden" name="chatRoomName" id="chatRoomName" value="{{chatRoomName}}"> <!--on récupère le salon où a été envoyé le message-->
-                    <input type="hidden" name="whoSent" id="whoSent" value="{{username}}"> <!--on récupère l'utolosateur qui a envoyé le message-->
-                    <button type="submit" class="send-emoji-button">Emoji</button>
-                    <button type="submit" class="send-emoji-button"> Send ➡ <i class="fas fa-arrow-right"></i></button> <!--On récupère tous les infos du message avec le submit-->
-                </form>
                 </h3>
             </div>
         </section>
         <div id="chatWindow"></div>
+        <form method="POST" action="" id="messageForm" onsubmit="return messageSubmit(event)">
+            {% csrf_token %}
+            <input type="text" placeholder="Type a message" name="messageSent" id="messageSent">
+            <input type="hidden" name="chatRoomName" id="chatRoomName" value="{{chatRoomName}}"> <!--on récupère le salon où a été envoyé le message-->
+            <input type="hidden" name="whoSent" id="whoSent" value="{{username}}"> <!--on récupère l'utolosateur qui a envoyé le message-->
+            <button type="submit">Send</button> <!--On récupère tous les infos du message avec le submit-->
+        </form>
         {% if user.is_superuser %}
             <h2>User list</h2>
         <div id="userWindow"></div>
