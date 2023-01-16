@@ -21,15 +21,17 @@
                 else if (response.isMuted) { // si l'utilisateur est muet, on affiche un message d'erreur
                     alert("You are muted !")
                 }
-                else if (response.roomExists) { // si le salon n'existe pas, on affiche un message d'erreur
-                    alert("This room doesn't exist ! Please go to the home page !")
-                }
                 else if (response.canEnter) {
                     alert("You shouldn't be in this room ! Get out !")
+                    window.location.href='/' // on redirige vers la page d'accueil si l'utilisateur est banni et qu'il tente d'envoyer un message
                 }
                 else {
                 document.getElementById("messageSent").value="" //on vide le formulaire
                 }
+            },
+            error: function(response) { //si le salon n'existe pas, une erreur est renvoyée, et on redirige vers la page d'accueil
+                alert("This room doesn't exist ! Please go to the home page !")
+                window.location.href='/' // on redirige vers la page d'accueil si l'utilisateur tente d'envoyer un message dans un salon qui n'existe pas
             }
         });
     }
@@ -110,7 +112,6 @@
             }
         })
     };
-
     setInterval(function(){
         var url='/get/{{nameOfTheRoom}}'
         $.ajax({

@@ -32,7 +32,7 @@ def rooms(request,roomName):
     username=request.user.get_username()
     user = User.objects.get(username=request.user.get_username()) #on récupère l'utilisateur pas en string mais en objet
     chatRoomName=Room.objects.get(roomName=nameOfTheRoom) #on récupère le nom du salon pour savoir dans quel salon le message a été envoyé
-    if user.groups.filter(name=chatRoomName).exists() :
+    if user.groups.filter(name=chatRoomName).exists() : #si l'utilisateur est dans le groupe du salon, il peut accéder au salon
         return render(request,'chatroom/room.html',{ 'nameOfTheRoom' : nameOfTheRoom, 'username':username, 'chatRoomName':chatRoomName})
     else :
         messages.error(request,"You can't enter this chatroom")
@@ -46,18 +46,15 @@ def sendMessage(request):
         messageSent=request.POST['messageSent']
         chatRoomName=request.POST['chatRoomName']
         user = User.objects.get(username=request.user.get_username())
-        getGroup=Group.objects.get(name='isNotMuted') #on récupère le groupe
+        isNotMuted=Group.objects.get(name='isNotMuted') #on récupère le groupe
         canEnter=Group.objects.get(name=chatRoomName)
         if user.groups.filter(name=canEnter).exists() : #on vérifie que l'utilisateur est bien dans le groupe du salon
-            if user.groups.filter(name=getGroup).exists() : #si l'utilisateur est dans le groupe isNotMuted, il peut envoyer des messages
-                if Room.objects.filter(roomName=chatRoomName).exists() :
-                    if messageSent=="":
-                        return JsonResponse({'isEmpty': True})
-                    newMessage=Message(message=messageSent,where=chatRoomName,who=user,when=date) #on sauvegarde le message
-                    newMessage.save()
-                    return JsonResponse({'isEmpty': False})
-                else :
-                    return JsonResponse({'roomExists': True})
+            if user.groups.filter(name=isNotMuted).exists() : #si l'utilisateur est dans le groupe isNotMuted, il peut envoyer des messages
+                if messageSent=="":
+                    return JsonResponse({'isEmpty': True})
+                newMessage=Message(message=messageSent,where=chatRoomName,who=user,when=date) #on sauvegarde le message
+                newMessage.save()
+                return JsonResponse({'isEmpty': False})
             else :
                 return JsonResponse({'isMuted': True}) #si l'utilisateur n'est pas dans le groupe isNotMuted, il ne peut pas envoyer de message
         else :
