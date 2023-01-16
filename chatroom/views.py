@@ -64,10 +64,14 @@ def sendMessage(request):
             return JsonResponse({'canEnter': True})
 
 def getMessage(request,roomName): #paramètre roomName nécessaire pour ne récupérer que les messages d'un salon
-    allMessagesList=Message.objects.filter(where=roomName) #on ne récupère que les messages du salon souhaité
-    allMessagesJson=[{'allMessagesValue':message.message, 'who':message.who, 'messageId':message.id,'when':message.when} for message in allMessagesList] #on récupère la valeur allMessageValue message.message(champ de la classe Message), un seul message aurait donné la classe, le deuxième donne la ième valeur
-    #on récupère aussi l'id du message pour ensuite simplifier la suppression de message
-    return JsonResponse({"allMessagesList":allMessagesJson})
+    chatRoomName=Room.objects.get(roomName=roomName)
+    if Room.objects.filter(roomName=chatRoomName).exists():
+        allMessagesList=Message.objects.filter(where=roomName) #on ne récupère que les messages du salon souhaité
+        allMessagesJson=[{'allMessagesValue':message.message, 'who':message.who, 'messageId':message.id,'when':message.when} for message in allMessagesList] #on récupère la valeur allMessageValue message.message(champ de la classe Message), un seul message aurait donné la classe, le deuxième donne la ième valeur
+        #on récupère aussi l'id du message pour ensuite simplifier la suppression de message
+        return JsonResponse({"allMessagesList":allMessagesJson})
+    else :
+        return JsonResponse({'roomDeleted': True})
 #à partir d'ici, que des vues qui gèrent les requêtes ajax pour l'admin
 def messageDelete(request):
     if request.user.is_superuser: #on vérifie que l'utilisateur est bien un admin, au cas où un utilisateur perd ses droits d'admin mais qu'il a encore la page ouverte
