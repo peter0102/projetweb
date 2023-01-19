@@ -11,20 +11,22 @@
         </header>
         <section>
             <div class="form-container">
-                <h2>
-                <p class="normal-text">Already have an account ? <a href="{% url 'login' %}">Sign in</a></p>
-                <form method="POST" action="">
-                    {% csrf_token %}
-                    {% for field in form %}
-                        {{field.label}} :
-                        {{field}}
-                    {% endfor %}
-                    <input type="submit" value="Sign up 👌" class="send-button">
-                </form>
+                <div class="text-center mt-5">
+                    <form method="POST" action="" style="max-width:300px;margin:auto;">{% csrf_token %}
+                        <img src="https://cdn-icons-png.flaticon.com/512/3699/3699928.png" alt="Logo" class="mt-4 mb-4" height="72" alt="Logo">
+                        <h1 class="h3 mb-3 font-weight-normal">Please sign in !</h1>
+                        <input type="text" id="username" class="form-control mb-3" placeholder="Username" name="username" required autofocus>
+                        <input type="password" id="password1" placeholder="Password" name="password1" class="form-control">
+                        <input type="password" id="password2" placeholder="Password" name="password2" class="form-control">
+                        <div class="mt-4">
+                            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Register">
+                        </div>
+                    </form>
                 {% for message in messages %}
                     <p>{{message}}</p>
                 {% endfor %}
                 </h2>
+                <p class="text-right mt-3">Already have an account ? <a href="{% url 'register' %}">Sign in.</a></p>
             </div>
         </section>
      </body>

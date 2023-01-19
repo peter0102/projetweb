@@ -11,13 +11,12 @@ def register(request):
         return redirect('home') #home defini dans chatroom\urls.py
     form=UserForm()
     if request.method=='POST' :
-        form=UserForm(request.POST)
         password1=request.POST['password1']
         password2=request.POST['password2']
         username=request.POST['username']
         User=get_user_model()
-        if form.is_valid(): 
-            form.save() #si les données remplies sont correctes, on les sauvegarde et cela crée l'utilisateur
+        if not User.objects.filter(username=username).exists():
+            User.objects.create_user(username=username,password=password2)
             newGroup = Group.objects.get_or_create(name ='isNotMuted') #on crée un groupe pour les utilisateurs muets
             getGroup=Group.objects.get(name='isNotMuted') #on récupère le groupe
             user=User.objects.get(username=username) #on récupère l'utilisateur
