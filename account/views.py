@@ -16,15 +16,22 @@ def register(request):
         username=request.POST['username']
         User=get_user_model()
         if not User.objects.filter(username=username).exists():
-            User.objects.create_user(username=username,password=password2)
-            newGroup = Group.objects.get_or_create(name ='isNotMuted') #on crée un groupe pour les utilisateurs muets
-            getGroup=Group.objects.get(name='isNotMuted') #on récupère le groupe
-            user=User.objects.get(username=username) #on récupère l'utilisateur
-            user.groups.add(getGroup) #on ajoute l'utilisateur au groupe
-            messages.success(request,"Account created, you can sign in")
-            return redirect('login') #redirection vers la page login
-        elif password1 != password2 :
-            messages.error(request,"Those passwords didn't match, please try again")
+            if not password1 == "":
+                if password1 == password2 :
+                    User.objects.create_user(username=username,password=password1)
+                    newGroup = Group.objects.get_or_create(name ='isNotMuted') #on crée un groupe pour les utilisateurs muets
+                    getGroup=Group.objects.get(name='isNotMuted') #on récupère le groupe
+                    user=User.objects.get(username=username) #on récupère l'utilisateur
+                    user.groups.add(getGroup) #on ajoute l'utilisateur au groupe
+                    allGroups=Group.objects.all()
+                    for group in allGroups:
+                        user.groups.add(group) #on ajoute l'utilisateur à tous les groupes pour qu'il puisse accéder à tous les salons
+                    messages.success(request,"Account created, you can sign in")
+                    return redirect('login') #redirection vers la page login
+                else:
+                    messages.error(request,"Those passwords didn't match, please try again")
+            else:
+                messages.error(request,"The password field is empty")
         elif User.objects.filter(username=username).exists():
             messages.error(request,"This username is already taken")
         else:
