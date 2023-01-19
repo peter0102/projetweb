@@ -188,6 +188,9 @@ def renameRoom(request):
         if not Room.objects.filter(roomName=newRoomName).exists():
             room.roomName=newRoomName
             room.save()
+            roomGroup=Group.objects.get(name=roomName)
+            roomGroup.name=newRoomName
+            roomGroup.save()
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'roomExists': True})
