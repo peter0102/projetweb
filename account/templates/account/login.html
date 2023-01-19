@@ -21,11 +21,15 @@
                 </div>
             </form>
         <p class="text-right mt-3">Don't have an account ? <a href="{% url 'register' %}">Sign up.</a></p>
-        </div>
-        
         {% for message in messages %}
-        <p>{{message}}</p>
+        <script>
+        var message = "{{ message }}";
+        if (message == "Wrong password or username") {
+            alert("It is the wrong password");
+        }
+        </script>
         {% endfor %}
+        </div>
      </body>
 </html>           
           
