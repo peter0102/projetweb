@@ -9,7 +9,6 @@ from django.contrib import messages
 def register(request):
     if request.user.is_authenticated: #si l'utilisateur est connecté, il ne doit pas pouvoir accéder aux pages register et login
         return redirect('home') #home defini dans chatroom\urls.py
-    form=UserForm()
     if request.method=='POST' :
         password1=request.POST['password1']
         password2=request.POST['password2']
