@@ -7,6 +7,7 @@ from django.contrib.auth.models import Group
 from django.contrib import messages
 # Create your views here.
 def register(request):
+    form=UserForm()
     if request.user.is_authenticated: #si l'utilisateur est connecté, il ne doit pas pouvoir accéder aux pages register et login
         return redirect('home') #home defini dans chatroom\urls.py
     if request.method=='POST' :
