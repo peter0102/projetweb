@@ -43,15 +43,16 @@ setInterval(function(){
             for (let i = 0; i < response.allRooms.length; i++) {
                 document.getElementById("roomWindow").innerHTML+='<p>' + response.allRooms[i].roomName+ '</p>'
                 document.getElementById("roomWindow").innerHTML+='<a href="/chatroom/room_name='+response.allRooms[i].roomName+'">Join this chatroom</a>'
-                var renameButton=document.createElement("button")
-                renameButton.innerHTML="Rename Room"
-                renameButton.setAttribute("onclick", "renameRoom('"+response.allRooms[i].roomName+"')") //execute la fonction deleteRoom au clic
-                document.getElementById("roomWindow").appendChild(renameButton)
                 {% if user.is_superuser %} // syntaxe marquée comme une erreur par vscode, mais fonctionne avec des extensions django qui reconnaissent le langage template
                     var deletetionButton=document.createElement("button")
                     deletetionButton.innerHTML="Delete"
                     deletetionButton.setAttribute("onclick", "deleteRoom('"+response.allRooms[i].roomName+"')") //execute la fonction deleteRoom au clic
                     document.getElementById("roomWindow").appendChild(deletetionButton)
+
+                    var renameButton=document.createElement("button")
+                    renameButton.innerHTML="Rename Room"
+                    renameButton.setAttribute("onclick", "renameRoom('"+response.allRooms[i].roomName+"')") //execute la fonction deleteRoom au clic
+                    document.getElementById("roomWindow").appendChild(renameButton)
                 {% endif %}
 
             }

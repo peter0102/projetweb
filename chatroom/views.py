@@ -77,6 +77,12 @@ def messageDelete(request):
             message=Message.objects.get(id=messageId)
             message.delete()
             return JsonResponse({'success': True})
+    else :
+        if request.method=='POST':
+            messageId=request.POST['messageId']
+            message=Message.objects.get(id=messageId)
+            message.delete()
+            return JsonResponse({'success': True})
 def getRooms(request):
     allRooms=Room.objects.all()
     allRoomsJson=[{'roomName':room.roomName} for room in allRooms]
@@ -194,3 +200,13 @@ def renameRoom(request):
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'roomExists': True})
+def changeMessage(request):
+    if request.method=='POST':
+        messageId=request.POST['messageId']
+        messageText=Message.objects.get(id=messageId)
+        newMessage=request.POST['newMessage']
+        if newMessage=="":
+            return JsonResponse({'isEmpty': True})
+        messageText.message=newMessage
+        messageText.save()
+        return JsonResponse({'success': True})
