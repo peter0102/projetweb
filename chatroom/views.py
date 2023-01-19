@@ -180,3 +180,14 @@ def unbanUser(request): #ne permet que de débannir un utilisateur du salon dans
                 return JsonResponse({'isNotBanned': True})
             user.groups.add(getGroup)
             return JsonResponse({'isNotBanned': False})
+def renameRoom(request):
+    if request.method=='POST':
+        roomName=request.POST['roomName']
+        room=Room.objects.get(roomName=roomName) #on récupère l'objet room
+        newRoomName=request.POST['newRoomName']
+        if not Room.objects.filter(roomName=newRoomName).exists():
+            room.roomName=newRoomName
+            room.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'roomExists': True})

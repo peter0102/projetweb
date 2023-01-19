@@ -19,4 +19,5 @@ urlpatterns = [
     path('unmuteUser/',views.unmuteUser,name='unmuteUser'),
     path('banUser/',views.banUser,name='banUser'),
     path('unbanUser/',views.unbanUser,name='unbanUser'),
+    path('renameRoom/',views.renameRoom,name='renameRoom'),
 ]
