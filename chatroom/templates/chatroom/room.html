@@ -163,6 +163,16 @@
                         {% endif %}
                     }
                 }
+            },
+            error: function(xhr) { //si le salon n'existe pas, une erreur est renvoyée, et on redirige vers la page d'accueil
+                if (xhr.status == 500) {
+                    alert("This room doesn't exist anymore !")
+                    window.location.href = "/chatroom/home/"
+                }
+                if (xhr.status=404) {
+                    alert("This room doesn't exist anymore !")
+                    window.location.href = "/chatroom/home/"
+                }
             }
         });
         {% if user.is_superuser %}
@@ -198,7 +208,7 @@
             }
         })
         {% endif %}
-},300) //envoie une requête toutes les 600ms
+},300) //envoie une requête toutes les 300ms
 </script>
 <html lang="fr">
     <head>

@@ -68,7 +68,7 @@ def getMessage(request,roomName): #paramètre roomName nécessaire pour ne récu
         #on récupère aussi l'id du message pour ensuite simplifier la suppression de message
         return JsonResponse({"allMessagesList":allMessagesJson})
     else :
-        return JsonResponse({'roomDeleted': True})
+        return JsonResponse({'error': True})
 #à partir d'ici, que des vues qui gèrent les requêtes ajax pour l'admin
 def messageDelete(request):
     if request.user.is_superuser: #on vérifie que l'utilisateur est bien un admin, au cas où un utilisateur perd ses droits d'admin mais qu'il a encore la page ouverte
@@ -197,6 +197,11 @@ def renameRoom(request):
             roomGroup=Group.objects.get(name=roomName)
             roomGroup.name=newRoomName
             roomGroup.save()
+            allMessages=Message.objects.all()
+            for message in allMessages: #on déplace tous les messages dans la nouvelle room
+                if message.where==roomName:
+                    message.where=newRoomName
+                    message.save()
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'roomExists': True})
