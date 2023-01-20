@@ -163,16 +163,6 @@
                         {% endif %}
                     }
                 }
-            },
-            error: function(xhr) { //si le salon n'existe pas, une erreur est renvoyée, et on redirige vers la page d'accueil
-                if (xhr.status == 500) {
-                    alert("This room doesn't exist anymore !")
-                    window.location.href = "/chatroom/home/"
-                }
-                if (xhr.status=404) {
-                    alert("This room doesn't exist anymore !")
-                    window.location.href = "/chatroom/home/"
-                }
             }
         });
         {% if user.is_superuser %}
@@ -208,38 +198,74 @@
             }
         })
         {% endif %}
-},300) //envoie une requête toutes les 300ms
+},300) //envoie une requête toutes les 600ms
 </script>
 <html lang="fr">
     <head>
         <meta charset="utf-8" />
         <!--<link rel="stylesheet" href="{% static 'style1.css' %}">-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
     </head>
     <body>
-        <header>
-           <h1>Chatroom : {{ nameOfTheRoom }}</h1>
-        </header>
-        <section>
-            <div>
-                <h2>User : {{ username }} </h2>
+
+        <div class="chat-container">
+            <div id = "chatWindow" class="chatWindow"></div>
+            <div class="chat-utilities">
+    
+                <!-- top utility buttons -->
+                <div class="utility-container">
+                    <ul class="utility-group">
+                        <li><img src="{% static 'icons/bold-solid.svg' %}" alt=""></li>
+                        <li><img src="{% static 'icons/italic-solid.svg' %}" alt=""></li>
+                        <li><img src="{% static 'icons/strikethrough-solid.svg' %}" alt=""></li>
+                    </ul>
+                    <ul class="utility-group">
+                        <li><img src="{% static 'icons/link-solid.svg' %}" alt=""></li>
+                    </ul>
+                    <ul class="utility-group">
+                        <li><img src="{% static 'icons/list-solid.svg' %}" alt=""></li>
+                        <li><img src="{% static 'icons/list-ol-solid.svg' %}" alt=""></li>
+                    </ul>
+                    <ul class="utility-group">
+                        <li><img src="{% static 'icons/code-solid.svg' %}" alt=""></li>
+                    </ul>
+                </div>
+    
+                <!-- chat form -->
+                <form method="POST" action="" id="messageForm" onsubmit="return messageSubmit(event)">
+                    {% csrf_token %}
+                    <input type="text" placeholder="Type a message" name="messageSent" id="messageSent">
+                    <button type="submit">Send <img src="{% static 'icons/paper-plane-solid.svg' %}" alt=""></button>
+                    <input type="hidden" name="chatRoomName" id="chatRoomName" value="{{chatRoomName}}"> <!--on récupère le salon où a été envoyé le message-->
+                    <input type="hidden" name="whoSent" id="whoSent" value="{{username}}">
+                </form>
+                <!-- bottom utility buttons -->
+                <div class="utility-container"> 
+                    <ul class="utility-group">
+                        <li><img src="{% static 'icons/plus-solid.svg' %}" alt=""></li>
+                    </ul>
+                    <ul class="utility-group">
+                        <li><img src="{% static 'icons/video-solid.svg' %}" alt=""></li>
+                        <li><img src="{% static 'icons/microphone-solid.svg' %}" alt=""></li>
+                    </ul>
+                    <ul class="utility-group">
+                        <li class="emoji-selector" id="emojiSelector">
+                            <div class="input-container">
+                                <input id="emojiSearch" type="text" name="" id="" placeholder="GrosNichons...">
+                            </div>
+                            <ul id="emojiList" class="emoji-list">
+                                
+                            </ul>
+                        </li>
+                        <li id="emojiSelectorIcon"><img src="{% static 'icons/face-smile-regular.svg' %}" alt=""></li>
+                        <li><img src="{% static 'icons/at-solid.svg' %}" alt=""></li>
+                        <li><img src="{% static 'icons/font-solid.svg' %}" alt=""></li>
+                    </ul>
+                </div>
             </div>
-            <div class="form-container">
-                <h3>
-                <a href="{% url 'home' %}"> Go to the homepage</a>   
-                </h3>
-            </div>
-        </section>
-        <div id="chatWindow"></div>
-        <form method="POST" action="" id="messageForm" onsubmit="return messageSubmit(event)">
-            {% csrf_token %}
-            <input type="text" placeholder="Type a message" name="messageSent" id="messageSent">
-            <input type="hidden" name="chatRoomName" id="chatRoomName" value="{{chatRoomName}}"> <!--on récupère le salon où a été envoyé le message-->
-            <input type="hidden" name="whoSent" id="whoSent" value="{{username}}"> <!--on récupère l'utolosateur qui a envoyé le message-->
-            <button type="submit">Send</button> <!--On récupère tous les infos du message avec le submit-->
-        </form>
-        {% if user.is_superuser %}
-            <h2>User list</h2>
-        <div id="userWindow"></div>
-            {% endif %}
-     </body>
+        </div>
+        <script src="{% static 'app.js' %}"></script>
+    </body>
 </html>    
