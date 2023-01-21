@@ -49,7 +49,8 @@ body {
   align-items: center;
   border-radius: 25px;
   background-color: #eee;
-  position: relative;
+  position: absolute;
+  bottom: 20px;
 }
 .chat-utilities .utility-container ul li {
   height: 50px;
