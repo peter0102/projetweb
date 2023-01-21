@@ -13,7 +13,7 @@
             <div class="form-container">
                 <div class="text-center mt-5">
                     <form method="POST" action="" style="max-width:300px;margin:auto;">{% csrf_token %}
-                        <img src="https://cdn-icons-png.flaticon.com/512/3699/3699928.png" alt="Logo" class="mt-4 mb-4" height="72" alt="Logo">
+                        <img src="{% static 'sign_up.jpg' %}" alt="Logo" class="mt-4 mb-4" height="72" alt="Logo">
                         <h1 class="h3 mb-3 font-weight-normal">Please sign up !</h1>
                         <input type="text" id="username" class="form-control mb-3" placeholder="Username" name="username" required autofocus>
                         <input type="password" id="password1" placeholder="Password" name="password1" class="form-control mb-3">
