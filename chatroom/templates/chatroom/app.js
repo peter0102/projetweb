@@ -8,7 +8,7 @@ emojiSelectorIcon.addEventListener('click', () => {
     emojiSelector.classList.toggle("active");
 });
 
-fetch("emoji-api-main/src/emojis.json")
+fetch("{% static 'emojis.json' %}")
     .then(res => res.json())
     .then(data => loadEmoji(data))
 
